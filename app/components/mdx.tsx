@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { highlight } from 'sugar-high'
 import React from 'react'
+import { CopyButton } from './copy-button'
 
 function Table({ data }) {
   let headers = data.headers.map((header, index) => (
@@ -44,24 +44,89 @@ function CustomLink(props) {
   return <a target="_blank" rel="noopener noreferrer" {...props} />
 }
 
-function RoundedImage(props) {
-  return <Image alt={props.alt} className="rounded-lg" {...props} />
-}
-
 function Code({ children, ...props }) {
   let codeHTML = highlight(children)
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
+}
+
+function Pre({ children }: { children?: React.ReactNode }) {
+  const child = React.Children.only(children) as React.ReactElement<{
+    className?: string
+    children?: string
+  }>
+
+  const language = (child?.props?.className || '')
+    .replace('language-', '')
+    .trim() || 'text'
+
+  const rawCode = typeof child?.props?.children === 'string'
+    ? child.props.children.trimEnd()
+    : ''
+
+  return (
+    <div
+      className="not-prose my-5 overflow-hidden rounded-lg"
+      style={{ border: '1px solid var(--line)' }}
+    >
+      {/* Header: language label + copy button */}
+      <div
+        className="flex items-center justify-between px-4 py-2"
+        style={{
+          backgroundColor: 'var(--code-header-bg)',
+          borderBottom: '1px solid var(--line)',
+        }}
+      >
+        <span
+          className="text-[11px] font-medium uppercase tracking-widest select-none"
+          style={{ color: 'var(--muted-foreground)' }}
+        >
+          {language}
+        </span>
+        <CopyButton code={rawCode} />
+      </div>
+      {/* Code body */}
+      <pre
+        className="overflow-x-auto px-4 py-4 text-sm m-0 rounded-none border-0"
+        style={{ backgroundColor: 'var(--background)' }}
+      >
+        {children}
+      </pre>
+    </div>
+  )
+}
+
+function MarkdownImage({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
+  return (
+    <figure className="my-6 not-prose">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt || ''}
+        className="w-full rounded-lg"
+        style={{ border: '1px solid var(--border)', display: 'block' }}
+        {...props}
+      />
+      {alt && (
+        <figcaption
+          className="mt-2 text-center text-xs"
+          style={{ color: 'var(--muted-foreground)' }}
+        >
+          {alt}
+        </figcaption>
+      )}
+    </figure>
+  )
 }
 
 function slugify(str) {
   return str
     .toString()
     .toLowerCase()
-    .trim() // Remove whitespace from both ends of a string
-    .replace(/\s+/g, '-') // Replace spaces with -
-    .replace(/&/g, '-and-') // Replace & with 'and'
-    .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for -
-    .replace(/\-\-+/g, '-') // Replace multiple - with single -
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/&/g, '-and-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
 }
 
 function createHeading(level) {
@@ -93,9 +158,10 @@ let components = {
   h4: createHeading(4),
   h5: createHeading(5),
   h6: createHeading(6),
-  Image: RoundedImage,
   a: CustomLink,
   code: Code,
+  pre: Pre,
+  img: MarkdownImage,
   Table,
 }
 

@@ -1,0 +1,76 @@
+---
+title: 'How AI Changed the Way I Write Code'
+publishedAt: '2025-06-01'
+summary: 'My honest take on using AI coding tools daily — what works, what breaks, and where I think this is all heading.'
+---
+
+A year ago I was skeptical. Not in the "AI will steal our jobs" way — more in the "this autocomplete is going to hallucinate a library that doesn't exist and I'll spend two hours figuring out why" way. That skepticism was earned. But things have shifted enough that I want to write down where I actually stand today.
+
+## The shift from autocomplete to conversation
+
+The first generation of AI coding tools felt like a smarter IntelliSense. Useful for boilerplate, occasionally impressive, mostly unreliable for anything non-trivial. The mental model was still: I write code, AI suggests completions.
+
+That's not how I use it now.
+
+The shift happened when I started treating it less like a code generator and more like a pair programmer who happens to type faster than anyone alive. I describe what I'm trying to do, we go back and forth, and I end up with something that I still have to review and understand — but didn't have to draft from scratch.
+
+The difference sounds subtle but it changes everything. When I'm generating completions, I'm still thinking token by token. When I'm having a conversation, I'm thinking about the problem.
+
+## What it's actually good at
+
+**Mechanical transformations.** Renaming a pattern across a codebase, converting a class-based component to a hook-based one, migrating from one API to another. These are high-effort-low-thinking tasks that I used to dread. Now they take minutes.
+
+**First drafts.** The first implementation of anything is often the hardest to start. Having something to react to — even if it's wrong — cuts through the blank-page problem. I find myself editing AI output far faster than I write from scratch, even when I end up replacing most of it.
+
+**Explaining unfamiliar code.** Dropped into a codebase I've never seen before? Asking "what does this function actually do and what's the invariant it relies on" gets a useful answer in seconds. It's not always right, but it's a better starting point than reading docs cold.
+
+**Writing tests.** Specifically the tedious parts — generating test cases for edge conditions I might have forgotten, scaffolding test files, writing assertions I know I need but don't want to type out.
+
+## Where it still breaks down
+
+**It's confidently wrong in ways that are hard to spot.** This is the real cost. Bad code that looks plausible takes longer to debug than no code at all, because you start by trusting it. I've learned to treat anything I didn't write or didn't deeply read as a liability until proven otherwise.
+
+**It doesn't know your codebase.** The model knows about programming in general. It doesn't know your internal conventions, your legacy constraints, the reason that weird `setTimeout(0)` is in the payment flow. Context windows are getting longer but the model still has a shallow understanding of why your code is the way it is.
+
+**Architecture and design.** High-level decisions — how to structure a feature, where to draw boundaries between modules, what the right abstraction is — still benefit from human judgment far more than implementation does. AI is better at filling in a design than at choosing one.
+
+**Debugging subtle state.** Race conditions, off-by-one errors in pagination, the interaction between two middleware layers — anything that requires holding a model of dynamic system behavior in your head. AI can help you reason through it, but it often latches onto the wrong hypothesis and runs with it.
+
+## A concrete example
+
+Here's a pattern I've found useful: instead of asking the AI to "write a function that does X," I describe the contract — inputs, outputs, edge cases — and review what comes back.
+
+```typescript
+// What I give the AI as context
+type FetchUserOptions = {
+  id: string
+  includeDeleted?: boolean  // default false
+}
+
+// What I expect back (typed, throws on 404)
+async function fetchUser(opts: FetchUserOptions): Promise<User> {
+  const res = await fetch(`/api/users/${opts.id}?deleted=${opts.includeDeleted ?? false}`)
+  if (!res.ok) throw new Error(`User ${opts.id} not found`)
+  return res.json()
+}
+```
+
+The key is that I'm giving the AI enough constraints that there's only one reasonable implementation. If the description is vague, the output is vague.
+
+## The skill that matters more now
+
+I've noticed that the biggest productivity gains go to people who are good at being precise. Not at typing fast, not even at knowing every API — but at describing exactly what they want, recognizing when the output is wrong, and knowing when to take over.
+
+That's a different skill than raw coding ability, and it's worth developing deliberately. The engineers I've seen get the most out of these tools tend to be the ones who already write clear specs and readable commit messages — people who communicate precisely about code, not just write it.
+
+## Where this is going
+
+I don't think AI will replace software engineers, at least not in any timeframe I can see clearly. What I do think is that the job description is shifting. Less time on the implementation treadmill, more time on the things that are hard to specify: understanding what a user actually needs, designing systems that don't collapse under complexity, making judgment calls when constraints conflict.
+
+Whether that's exciting or terrifying probably depends on which parts of the job you liked to begin with.
+
+For me, it's mostly exciting. I became a developer because I liked building things and solving problems — not because I enjoyed typing boilerplate. Anything that reduces the former without touching the latter is a good trade.
+
+---
+
+I'm still figuring out what the right workflow looks like. If you've landed on something that works well, I'd genuinely like to hear about it.

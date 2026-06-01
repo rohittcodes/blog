@@ -1,11 +1,42 @@
 @import 'tailwindcss';
 
-::selection {
-  background-color: #47a3f3;
-  color: #fefefe;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-surface: var(--surface);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
+/* ── Light mode tokens ───────────────────────────────────────────────────── */
 :root {
+  --panel-side: oklch(0.12 0.005 285);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.141 0.005 285.823);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.141 0.005 285.823);
+  --border: oklch(0.92 0.004 286.32);
+  --line: color-mix(in oklab, var(--border) 64%, var(--background));
+  --accent: oklch(0.967 0.001 286.375);
+  --accent-foreground: oklch(0.21 0.006 285.885);
+  --surface: oklch(0.985 0 0);
+  --panel-stripe: color-mix(in oklab, var(--border) 55%, var(--background));
+  --panel-side-line: var(--line);
+  --code-header-bg: var(--background);
+
+  /* syntax highlighting */
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
   --sh-sign: #8996a3;
@@ -17,122 +48,291 @@
   --sh-entity: #e25a1c;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --sh-class: #4c97f8;
-    --sh-identifier: white;
-    --sh-keyword: #f47067;
-    --sh-string: #0fa295;
-  }
-  html {
-    color-scheme: dark;
-  }
+/* ── Dark mode tokens ────────────────────────────────────────────────────── */
+.dark {
+  color-scheme: dark;
+  --panel-side: oklch(0.05 0 0);
+  --background: oklch(0.141 0.005 285.823);
+  --foreground: oklch(0.985 0 0);
+  --muted: oklch(0.274 0.006 286.033);
+  --muted-foreground: oklch(0.705 0.015 286.067);
+  --card: oklch(0.21 0.006 285.885);
+  --card-foreground: oklch(0.985 0 0);
+  --border: oklch(0.40 0.01 286.033);
+  --line: color-mix(in oklab, var(--border) 64%, var(--background));
+  --accent: oklch(0.274 0.006 286.033);
+  --accent-foreground: oklch(0.985 0 0);
+  --surface: oklch(0.21 0.006 285.885);
+  --panel-stripe: color-mix(in oklab, var(--border) 50%, var(--background));
+  --panel-side-line: color-mix(in oklab, var(--border) 35%, var(--panel-side));
+  --code-header-bg: var(--background);
+
+  /* syntax highlighting */
+  --sh-class: #4c97f8;
+  --sh-identifier: white;
+  --sh-keyword: #f47067;
+  --sh-string: #0fa295;
 }
 
+/* ── Base ────────────────────────────────────────────────────────────────── */
 html {
   min-width: 360px;
+  overflow-x: hidden;
 }
 
+body {
+  background-color: var(--muted);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+/* Side panel gutters (full-bleed) */
+.panel-header-bleed {
+  position: relative;
+  background-color: var(--background);
+}
+.dark .panel-header-bleed {
+  background-color: var(--panel-side);
+}
+
+.panel-body-bleed {
+  position: relative;
+  display: flow-root;
+}
+
+.panel-body-bleed > .panel-hatch {
+  width: 100%;
+  min-height: 100%;
+}
+
+/* Solid center column so hatch only shows in the side gutters (body rows) */
+.panel-body-bleed .panel-hatch > :where(section, div) {
+  background-color: var(--background);
+}
+
+/* Stretch last panel to fill the page column (blog list, post body) */
+.panel-grow {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.panel-grow .panel-body-bleed {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.panel-grow .panel-body-bleed > .panel-hatch {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  min-height: 0;
+}
+
+.panel-grow .panel-body-bleed .panel-hatch > :where(section, div) {
+  flex-grow: 1;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 42rem;
+  min-height: 100%;
+}
+
+/* Top/bottom hairlines on side panels (softer than column --border) */
+.panel-header-bleed::before,
+.panel-header-bleed::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: max(0px, calc(50vw - 21rem));
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--panel-side-line), var(--panel-side-line)) top / 100% 1px no-repeat,
+    linear-gradient(var(--panel-side-line), var(--panel-side-line)) bottom / 100% 1px no-repeat;
+}
+
+.panel-body-bleed::before,
+.panel-body-bleed::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: max(0px, calc(50vw - 21rem));
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--line), var(--line)) top / 100% 1px no-repeat,
+    linear-gradient(var(--line), var(--line)) bottom / 100% 1px no-repeat;
+}
+
+.panel-header-bleed::before,
+.panel-body-bleed::before {
+  left: 0;
+}
+
+.panel-header-bleed::after,
+.panel-body-bleed::after {
+  right: 0;
+}
+
+.panel-hatch {
+  position: relative;
+  background-color: var(--background);
+}
+
+.panel-hatch::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--panel-stripe);
+  -webkit-mask-image: repeating-linear-gradient(
+    -45deg,
+    #000 0,
+    #000 1px,
+    transparent 2px,
+    transparent 6px
+  );
+  mask-image: repeating-linear-gradient(
+    -45deg,
+    #000 0,
+    #000 1px,
+    transparent 2px,
+    transparent 6px
+  );
+  pointer-events: none;
+}
+
+.panel-hatch > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Vertical borders at the content column edges */
+.column-sides {
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+
+/* Break out of a centered column to full viewport width */
+.full-bleed {
+  width: 100vw;
+  max-width: 100vw;
+  position: relative;
+  left: auto;
+  right: auto;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* ── Screen-spanning line utilities ─────────────────────────────────────── */
+.screen-line-top {
+  position: relative;
+}
+.screen-line-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100vw;
+  z-index: 0;
+  height: 1px;
+  width: 200vw;
+  background-color: var(--line);
+}
+
+.screen-line-bottom {
+  position: relative;
+}
+.screen-line-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -100vw;
+  z-index: 0;
+  height: 1px;
+  width: 200vw;
+  background-color: var(--line);
+}
+
+/* ── Prose ───────────────────────────────────────────────────────────────── */
 .prose .anchor {
   @apply absolute invisible no-underline;
-
   margin-left: -1em;
   padding-right: 0.5em;
   width: 80%;
   max-width: 700px;
   cursor: pointer;
 }
-
-.anchor:hover {
-  @apply visible;
-}
-
+.anchor:hover { @apply visible; }
 .prose a {
-  @apply underline transition-all decoration-neutral-400 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em];
+  @apply underline transition-all underline-offset-2 decoration-[0.1em];
+  text-decoration-color: var(--line);
 }
-
 .prose .anchor:after {
-  @apply text-neutral-300 dark:text-neutral-700;
+  color: var(--line);
   content: '#';
 }
-
-.prose *:hover > .anchor {
-  @apply visible;
-}
-
+.prose *:hover > .anchor { @apply visible; }
 .prose pre {
-  @apply bg-neutral-50 dark:bg-neutral-900 rounded-lg overflow-x-auto border border-neutral-200 dark:border-neutral-900 py-2 px-3 text-sm;
+  @apply overflow-x-auto text-sm m-0 rounded-none;
+  background-color: var(--background);
 }
-
+.prose pre .sh__line {
+  background: transparent;
+}
 .prose code {
-  @apply px-1 py-0.5 rounded-lg;
+  @apply px-1.5 py-0.5 rounded-md text-sm;
+  background-color: var(--muted);
+  border: 1px solid var(--border);
 }
-
 .prose pre code {
   @apply p-0;
-  border: initial;
-  line-height: 1.5;
+  border: none;
+  line-height: 1.6;
+  background-color: transparent;
+}
+.prose code span { @apply font-medium; }
+.prose img { @apply m-0; }
+.prose p { @apply my-4; color: var(--foreground); }
+.prose h1 { @apply text-3xl font-semibold tracking-tight mt-6 mb-2; }
+.prose h2 { @apply text-xl font-semibold tracking-tight mt-8 mb-2; }
+.prose h3 { @apply text-lg font-medium tracking-tight mt-6 mb-2; }
+.prose h4 { @apply text-base font-medium tracking-tight mt-6 mb-2; }
+.prose strong { @apply font-semibold; }
+.prose ul { @apply list-disc pl-6; }
+.prose ol { @apply list-decimal pl-6; }
+.prose > :first-child { margin-top: 1.25em !important; margin-bottom: 1.25em !important; }
+.prose hr { border-color: var(--line); }
+.prose blockquote {
+  border-left: 2px solid var(--line);
+  @apply pl-4 not-italic;
+  color: var(--muted-foreground);
 }
 
-.prose code span {
-  @apply font-medium;
-}
+pre::-webkit-scrollbar { display: none; }
+pre { -ms-overflow-style: none; scrollbar-width: none; }
 
-.prose img {
-  /* Don't apply styles to next/image */
-  @apply m-0;
-}
-
-.prose p {
-  @apply my-4 text-neutral-800 dark:text-neutral-200;
-}
-
-.prose h1 {
-  @apply text-4xl font-medium tracking-tight mt-6 mb-2;
-}
-
-.prose h2 {
-  @apply text-xl font-medium tracking-tight mt-6 mb-2;
-}
-
-.prose h3 {
-  @apply text-xl font-medium tracking-tight mt-6 mb-2;
-}
-
-.prose h4 {
-  @apply text-lg font-medium tracking-tight mt-6 mb-2;
-}
-
-.prose strong {
-  @apply font-medium;
-}
-
-.prose ul {
-  @apply list-disc pl-6;
-}
-
-.prose ol {
-  @apply list-decimal pl-6;
-}
-
-.prose > :first-child {
-  /* Override removing top margin, causing layout shift */
-  margin-top: 1.25em !important;
-  margin-bottom: 1.25em !important;
-}
-
-pre::-webkit-scrollbar {
-  display: none;
-}
-
-pre {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-/* Remove Safari input shadow on mobile */
-input[type='text'],
-input[type='email'] {
+input[type='text'], input[type='email'] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -145,6 +345,4 @@ table {
   white-space: nowrap;
 }
 
-.title {
-  text-wrap: balance;
-}
+.title { text-wrap: balance; }

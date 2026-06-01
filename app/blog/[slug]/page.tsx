@@ -1,7 +1,13 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { CustomMDX } from 'app/components/mdx'
+import { PageBleed, Panel } from 'app/components/panel'
 import { formatDate, getBlogPosts } from 'app/blog/utils'
 import { baseUrl } from 'app/sitemap'
+
+type PageProps = {
+  params: Promise<{ slug: string }>
+}
 
 export async function generateStaticParams() {
   let posts = getBlogPosts()
@@ -11,8 +17,9 @@ export async function generateStaticParams() {
   }))
 }
 
-export function generateMetadata({ params }) {
-  let post = getBlogPosts().find((post) => post.slug === params.slug)
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params
+  let post = getBlogPosts().find((post) => post.slug === slug)
   if (!post) {
     return
   }
@@ -24,12 +31,17 @@ export function generateMetadata({ params }) {
     image,
   } = post.metadata
   let ogImage = image
-    ? image
-    : `${baseUrl}/og?title=${encodeURIComponent(title)}`
+    ? image.startsWith('http')
+      ? image
+      : `${baseUrl}${image}`
+    : `/og?title=${encodeURIComponent(title)}`
 
   return {
     title,
     description,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
     openGraph: {
       title,
       description,
@@ -51,15 +63,16 @@ export function generateMetadata({ params }) {
   }
 }
 
-export default function Blog({ params }) {
-  let post = getBlogPosts().find((post) => post.slug === params.slug)
+export default async function Blog({ params }: PageProps) {
+  const { slug } = await params
+  let post = getBlogPosts().find((post) => post.slug === slug)
 
   if (!post) {
     notFound()
   }
 
   return (
-    <section>
+    <div className="flex min-h-0 flex-1 flex-col">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -77,22 +90,42 @@ export default function Blog({ params }) {
             url: `${baseUrl}/blog/${post.slug}`,
             author: {
               '@type': 'Person',
-              name: 'My Portfolio',
+              name: 'Rohith Singh',
             },
           }),
         }}
       />
-      <h1 className="title font-semibold text-2xl tracking-tighter">
-        {post.metadata.title}
-      </h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm">
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+
+      <PageBleed>
+        <h1 className="title text-xl font-semibold tracking-tight text-[var(--foreground)]">
+          {post.metadata.title}
+        </h1>
+        <p className="text-sm mt-2 tabular-nums text-[var(--muted-foreground)]">
           {formatDate(post.metadata.publishedAt)}
         </p>
-      </div>
-      <article className="prose">
-        <CustomMDX source={post.content} />
-      </article>
-    </section>
+        {post.metadata.summary ? (
+          <p className="text-sm mt-3 leading-relaxed text-[var(--muted-foreground)]">
+            {post.metadata.summary}
+          </p>
+        ) : null}
+      </PageBleed>
+
+      <Panel
+        title="Article"
+        grow
+        action={
+          <Link
+            href="/blog"
+            className="text-xs transition-colors text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+          >
+            ← All posts
+          </Link>
+        }
+      >
+        <article className="prose">
+          <CustomMDX source={post.content} />
+        </article>
+      </Panel>
+    </div>
   )
 }

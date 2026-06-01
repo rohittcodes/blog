@@ -8,20 +8,37 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import Footer from './components/footer'
 import { baseUrl } from './sitemap'
 
+const defaultOgImage = {
+  url: '/og?title=Rohith%20Singh',
+  width: 1200,
+  height: 630,
+  alt: 'Rohith Singh',
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'Next.js Portfolio Starter',
-    template: '%s | Next.js Portfolio Starter',
+    default: 'Rohith Singh',
+    template: '%s | Rohith Singh',
   },
-  description: 'This is my portfolio.',
+  description: 'Personal blog by Rohith Singh (@rohittcodes).',
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: 'My Portfolio',
-    description: 'This is my portfolio.',
+    title: 'Rohith Singh',
+    description: 'Personal blog by Rohith Singh (@rohittcodes).',
     url: baseUrl,
-    siteName: 'My Portfolio',
+    siteName: 'Rohith Singh',
     locale: 'en_US',
     type: 'website',
+    images: [defaultOgImage],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Rohith Singh',
+    description: 'Personal blog by Rohith Singh (@rohittcodes).',
+    images: [defaultOgImage.url],
   },
   robots: {
     index: true,
@@ -38,6 +55,14 @@ export const metadata: Metadata = {
 
 const cx = (...classes) => classes.filter(Boolean).join(' ')
 
+const themeScript = `
+try {
+  if (localStorage.getItem('theme') === 'dark') {
+    document.documentElement.classList.add('dark');
+  }
+} catch(_) {}
+`
+
 export default function RootLayout({
   children,
 }: {
@@ -46,20 +71,25 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cx(
-        'text-black bg-white dark:text-white dark:bg-black',
-        GeistSans.variable,
-        GeistMono.variable
-      )}
+      className={cx(GeistSans.variable, GeistMono.variable)}
+      suppressHydrationWarning
     >
-      <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
-        <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
-          <Navbar />
-          {children}
-          <Footer />
-          <Analytics />
-          <SpeedInsights />
-        </main>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="flex min-h-screen flex-col">
+        <Navbar />
+        <div
+          className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col"
+          style={{ backgroundColor: 'var(--background)' }}
+        >
+          <main className="flex min-h-0 flex-1 flex-col">
+            {children}
+            <Analytics />
+            <SpeedInsights />
+          </main>
+        </div>
+        <Footer />
       </body>
     </html>
   )
