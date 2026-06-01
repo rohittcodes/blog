@@ -91,6 +91,11 @@ export default async function Blog({ params }: PageProps) {
             author: {
               '@type': 'Person',
               name: 'Rohith Singh',
+              url: 'https://rohitt.codes',
+              sameAs: [
+                'https://github.com/rohittcodes',
+                'https://x.com/rohittcodes',
+              ],
             },
           }),
         }}

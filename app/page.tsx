@@ -5,8 +5,8 @@ import { PageBleed, Panel } from 'app/components/panel'
 
 // ── Edit this data ────────────────────────────────────────────────────────
 const ABOUT = {
-  tagline: 'Building things for the web.',
-  bio: "I'm a developer passionate about building clean, fast, and accessible web experiences. I enjoy working across the full stack and write about things I learn along the way.",
+  tagline: 'AI-native engineer. Building for the web.',
+  bio: "I'm Rohith Singh (@rohittcodes) — an AI-native engineer passionate about building full-stack web apps and AI-powered products. I work across the entire stack, from backend APIs to polished UIs, with a focus on integrating AI capabilities meaningfully. I write about TypeScript, React, Next.js, Rust, and what I learn building real things.",
   location: 'India',
   email: 'rohittcodes@gmail.com',
   website: 'https://rohitt.codes',
