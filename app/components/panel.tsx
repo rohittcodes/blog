@@ -15,13 +15,7 @@ export function Panel({
     <section className={grow ? 'panel-grow' : undefined}>
       {title ? (
         <div className="full-bleed panel-header-bleed">
-          <div
-            className="panel-hatch column-sides max-w-2xl mx-auto"
-            style={{
-              borderTop: '1px solid var(--line)',
-              borderBottom: '1px solid var(--line)',
-            }}
-          >
+          <div className="panel-hatch column-sides max-w-2xl mx-auto">
             <div className="px-6 py-2.5 flex items-center justify-between">
               <span
                 className="text-xs font-medium uppercase tracking-widest"
@@ -54,10 +48,7 @@ export function PageBleed({ children }: { children: React.ReactNode }) {
       <div className="panel-hatch w-full">
         <section
           className="column-sides mx-auto max-w-2xl px-6 py-8"
-          style={{
-            backgroundColor: 'var(--background)',
-            borderBottom: '1px solid var(--line)',
-          }}
+          style={{ backgroundColor: 'var(--background)' }}
         >
           {children}
         </section>

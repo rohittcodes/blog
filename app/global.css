@@ -33,7 +33,6 @@
   --accent-foreground: oklch(0.21 0.006 285.885);
   --surface: oklch(0.985 0 0);
   --panel-stripe: color-mix(in oklab, var(--border) 55%, var(--background));
-  --panel-side-line: var(--line);
   --code-header-bg: var(--background);
 
   /* syntax highlighting */
@@ -64,7 +63,6 @@
   --accent-foreground: oklch(0.985 0 0);
   --surface: oklch(0.21 0.006 285.885);
   --panel-stripe: color-mix(in oklab, var(--border) 50%, var(--background));
-  --panel-side-line: color-mix(in oklab, var(--border) 35%, var(--panel-side));
   --code-header-bg: var(--background);
 
   /* syntax highlighting */
@@ -105,6 +103,8 @@ body {
 .panel-header-bleed {
   position: relative;
   background-color: var(--background);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 .dark .panel-header-bleed {
   background-color: var(--panel-side);
@@ -156,45 +156,6 @@ body {
   min-height: 100%;
 }
 
-/* Top/bottom hairlines on side panels (softer than column --border) */
-.panel-header-bleed::before,
-.panel-header-bleed::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: max(0px, calc(50vw - 21rem));
-  z-index: 2;
-  pointer-events: none;
-  background:
-    linear-gradient(var(--panel-side-line), var(--panel-side-line)) top / 100% 1px no-repeat,
-    linear-gradient(var(--panel-side-line), var(--panel-side-line)) bottom / 100% 1px no-repeat;
-}
-
-.panel-body-bleed::before,
-.panel-body-bleed::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: max(0px, calc(50vw - 21rem));
-  z-index: 2;
-  pointer-events: none;
-  background:
-    linear-gradient(var(--line), var(--line)) top / 100% 1px no-repeat,
-    linear-gradient(var(--line), var(--line)) bottom / 100% 1px no-repeat;
-}
-
-.panel-header-bleed::before,
-.panel-body-bleed::before {
-  left: 0;
-}
-
-.panel-header-bleed::after,
-.panel-body-bleed::after {
-  right: 0;
-}
-
 .panel-hatch {
   position: relative;
   background-color: var(--background);
@@ -230,8 +191,8 @@ body {
 
 /* Vertical borders at the content column edges */
 .column-sides {
-  border-left: 1px solid var(--line);
-  border-right: 1px solid var(--line);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 
 /* Break out of a centered column to full viewport width */
@@ -274,7 +235,16 @@ body {
   background-color: var(--line);
 }
 
-/* ── Prose ───────────────────────────────────────────────────────────────── */
+/* ── Prose (aligned with site text-sm body) ─────────────────────────────── */
+.prose {
+  @apply text-sm leading-relaxed;
+  color: var(--muted-foreground);
+}
+
+.prose :where(h1, h2, h3, h4) {
+  color: var(--foreground);
+}
+
 .prose .anchor {
   @apply absolute invisible no-underline;
   margin-left: -1em;
@@ -286,7 +256,12 @@ body {
 .anchor:hover { @apply visible; }
 .prose a {
   @apply underline transition-all underline-offset-2 decoration-[0.1em];
+  color: var(--foreground);
   text-decoration-color: var(--line);
+}
+.prose a:hover {
+  color: var(--foreground);
+  text-decoration-color: var(--border);
 }
 .prose .anchor:after {
   color: var(--line);
@@ -302,6 +277,7 @@ body {
 }
 .prose code {
   @apply px-1.5 py-0.5 rounded-md text-sm;
+  color: var(--foreground);
   background-color: var(--muted);
   border: 1px solid var(--border);
 }
@@ -313,20 +289,24 @@ body {
 }
 .prose code span { @apply font-medium; }
 .prose img { @apply m-0; }
-.prose p { @apply my-4; color: var(--foreground); }
-.prose h1 { @apply text-3xl font-semibold tracking-tight mt-6 mb-2; }
-.prose h2 { @apply text-xl font-semibold tracking-tight mt-8 mb-2; }
-.prose h3 { @apply text-lg font-medium tracking-tight mt-6 mb-2; }
-.prose h4 { @apply text-base font-medium tracking-tight mt-6 mb-2; }
-.prose strong { @apply font-semibold; }
-.prose ul { @apply list-disc pl-6; }
-.prose ol { @apply list-decimal pl-6; }
+.prose p { @apply my-3; }
+.prose h1 { @apply text-xl font-semibold tracking-tight mt-6 mb-2; }
+.prose h2 { @apply text-lg font-semibold tracking-tight mt-7 mb-2; }
+.prose h3 { @apply text-base font-medium tracking-tight mt-5 mb-1.5; }
+.prose h4 { @apply text-sm font-medium tracking-tight mt-4 mb-1.5; }
+.prose strong {
+  @apply font-semibold;
+  color: var(--foreground);
+}
+.prose ul { @apply list-disc pl-5 my-3; }
+.prose ol { @apply list-decimal pl-5 my-3; }
+.prose li { @apply my-1; }
 .prose > :first-child { margin-top: 1.25em !important; margin-bottom: 1.25em !important; }
 .prose hr { border-color: var(--line); }
 .prose blockquote {
   border-left: 2px solid var(--line);
   @apply pl-4 not-italic;
-  color: var(--muted-foreground);
+  color: color-mix(in oklab, var(--muted-foreground) 85%, var(--background));
 }
 
 pre::-webkit-scrollbar { display: none; }
