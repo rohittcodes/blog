@@ -1,0 +1,40 @@
+---
+title: NovaBench — AI Recommendation Engine
+summary: A conversational laptop recommendation system using RAG over benchmark data, editorial content, and semantic search.
+image: https://media.contra.com/image/upload/q_auto,w_1100/nvxhavhh23qiquduiuke.avif
+href: https://github.com/rohittcodes/jj-rag-pipeline
+tech: FastAPI, PostgreSQL, pgvector, Redis, GPT-4o, Gemini Flash, Sentence Transformers
+date: 2026
+---
+
+## The problem
+
+Laptop shopping is a classic "too many filters, not enough judgment" problem — buyers don't think in spec sheets, they think in "I need something fast for video editing under $1500." Filter-based product search can't answer that. The brief was a recommendation engine that understands intent, not just keywords, and responds fast enough to feel conversational.
+
+## My role
+
+I built the full retrieval and recommendation pipeline — data ingestion, embedding generation, hybrid ranking, and the conversational layer on top — as a solo engineer.
+
+## What I built
+
+A RAG-based recommendation system that takes a natural-language need and returns personalized laptop recommendations in under 200ms, by combining three different signal sources instead of relying on one:
+
+- **Benchmark data** — actual performance numbers, not marketing specs.
+- **Editorial content** — review and comparison context that a spec sheet can't capture.
+- **Semantic search** — embeddings over product data so "good for video editing" maps to the right hardware characteristics even when those exact words never appear in the listing.
+
+Underneath that:
+
+- **Webhook-driven ingestion** keeps benchmark and product data current without manual re-syncing.
+- **Hybrid ranking** blends raw performance metrics with editorial signal so the engine doesn't just recommend the fastest chip, it recommends the right machine for the stated use case.
+- **Sub-200ms responses** via Sentence Transformers embeddings + pgvector similarity search and a Redis caching layer in front of the hot paths.
+
+## Tech stack
+
+FastAPI for the API layer, PostgreSQL + pgvector for vector storage, Redis for caching, GPT-4o and Gemini Flash for the conversational layer, Sentence Transformers for embeddings, Sanity CMS for editorial content, and Docker + AWS S3 for infra and assets.
+
+## Why this matters if you're hiring
+
+If your product needs search or recommendations that understand what users *mean*, not just what they typed, this is direct evidence I can build that — including the parts people usually skip, like keeping retrieval fast and keeping the underlying data fresh without manual babysitting.
+
+[Talk to me about your project →](mailto:rohittcodes@gmail.com)

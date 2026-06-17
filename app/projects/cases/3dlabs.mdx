@@ -1,0 +1,37 @@
+---
+title: 3DLabs — Autonomous AI Video Pipeline
+summary: An end-to-end system that turns a topic into a finished documentary-style video in ~8 minutes.
+image: https://media.contra.com/image/upload/q_auto,w_1100/pyjha3byvhi92pzfyewn.avif
+href: http://3dlabs.it.com
+tech: Next.js, TypeScript, Gemini, Replicate, ElevenLabs, FFmpeg
+date: 2026
+---
+
+## The problem
+
+Producing a documentary-style video — script, visuals, narration, sound, editing — normally takes a team and days of work. The brief here was to compress that entire pipeline into something a single person could trigger with a topic and a few minutes of waiting, without the output looking like generic AI slop.
+
+## My role
+
+I owned the full pipeline architecture: orchestrating 12+ AI models behind a single interface, designing the stage-by-stage execution flow, and building the product layer (auth, workspaces, billing) around it.
+
+## What I built
+
+An autonomous pipeline that takes a topic and runs it through ten sequential stages — script generation, scene planning, image generation, animation, voice narration, sound design, and final multi-format export — with zero manual intervention in between. End to end, a user gets a finished, production-ready video in roughly 8 minutes.
+
+The hard part wasn't calling AI models — it was making the *pipeline* hold together:
+
+- **Visual consistency across scenes.** Each scene's imagery has to look like it belongs to the same video, which means careful prompt and seed management across multiple generation calls, not just "call the model and hope."
+- **Unified routing across 12+ models.** Gemini for script and scene planning, Replicate (Flux, Seedance, LTX, Minimax) for image and video generation, ElevenLabs for narration — all routed through one orchestration layer so adding or swapping a model doesn't mean rewriting the pipeline.
+- **Cost control at the workspace level.** A custom credit reservation system tracks and caps spend per generation before it happens, not after, since AI inference cost can spiral fast without it.
+- **Multi-tenant from day one.** Clerk-backed auth and workspaces so this works as a real multi-user product, not a personal script.
+
+## Tech stack
+
+Next.js + TypeScript for the application layer, Google Gemini for narrative and scene planning, Replicate for image/video generation, ElevenLabs for text-to-speech, and FFmpeg for final assembly and export.
+
+## Why this matters if you're hiring
+
+This project is a good signal if what you need is someone who can wire together a dozen AI APIs into something that behaves like one coherent product — with the unglamorous but critical pieces (cost control, consistency, multi-tenancy) actually handled, not skipped.
+
+[Talk to me about your project →](mailto:rohittcodes@gmail.com)

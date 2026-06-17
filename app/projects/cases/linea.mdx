@@ -1,0 +1,40 @@
+---
+title: Linea — AI Workflow Orchestration Platform
+summary: A visual canvas for composing AI workflows, backed by a reliable execution engine and TypeScript SDK.
+image: https://media.contra.com/image/upload/q_auto,w_1100/wf4umuvgfkcpyqtkxkeh.avif
+href: https://getlinea.app
+tech: Next.js, NestJS, LangGraph.js, PostgreSQL, pgvector, Redis, BullMQ, Clerk
+date: 2026
+---
+
+## The problem
+
+Teams building AI automation usually end up with the same mess: scattered scripts, hardcoded API calls, no shared memory between runs, and zero visibility into why an agent made a decision. There was no good middle ground between "no-code automation tool that can't handle real AI workloads" and "engineering team hand-rolling everything in Python."
+
+Linea was built to be that middle ground — a platform serious enough for engineering teams to trust in production, but visual enough that non-engineers can compose and modify workflows themselves.
+
+## My role
+
+I designed and built Linea end-to-end — product direction, system architecture, and implementation across the full stack: the visual canvas, the execution engine, the agent runtime, and the infrastructure underneath it.
+
+## What I built
+
+A drag-and-drop canvas (React Flow) for composing workflows out of 24 node types across six categories — AI agents, data transforms, memory, third-party integrations (Slack, GitHub, Notion, Gmail), control flow, and infrastructure triggers — backed by an execution engine that actually holds up under real workloads.
+
+A few things I'm proud of in the architecture:
+
+- **Human-in-the-loop as a first-class primitive.** The Approval node pauses a running workflow for human review and resumes exactly where it left off — not a bolted-on webhook, but a core part of the execution model.
+- **Persistent memory across runs.** Workflows can read and write to memory that survives between executions, so agents get smarter the more they're used instead of starting from zero every time.
+- **Hybrid retrieval.** The Retriever node combines vector similarity and BM25 keyword search, so workflows get the precision of keyword search and the recall of embeddings without picking one or the other.
+- **Provider-agnostic by design.** Anthropic, OpenAI, Groq, Google, and Ollama are all interchangeable at the node level — switch models without rewriting workflows.
+- **Production concerns built in, not bolted on.** Role-based access control and audit logging ship as defaults, not an enterprise upsell.
+
+## Tech stack
+
+Next.js 15 + React Flow for the canvas. NestJS 11 + LangGraph.js for orchestration and agent execution. PostgreSQL 16 + pgvector for persistence and embeddings, Redis + BullMQ for queues, Clerk for auth, and pnpm + Turborepo to keep the monorepo sane.
+
+## Why this matters if you're hiring
+
+This is the kind of project where I had to own the *whole* problem — product decisions about what a workflow node should and shouldn't do, backend decisions about how to keep execution reliable under concurrency, and frontend decisions about making a visual canvas actually pleasant to use. If you need someone who can take "we have a fragmented AI automation problem" and turn it into a shipped product, this is the proof.
+
+[Talk to me about your project →](mailto:rohittcodes@gmail.com)

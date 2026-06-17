@@ -3,6 +3,7 @@ import { ThemeToggle } from './theme-toggle'
 
 const navItems = {
   '/': { name: 'home' },
+  '/projects': { name: 'projects' },
   '/blog': { name: 'blog' },
   'https://github.com/rohittcodes': { name: 'github' },
 }

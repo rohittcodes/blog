@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getBlogPosts, formatDate } from 'app/blog/utils'
+import { getProjects } from 'app/projects/utils'
 import { PageBleed, Panel } from 'app/components/panel'
 
 // ── Edit this data ────────────────────────────────────────────────────────
@@ -31,7 +32,7 @@ const EXPERIENCE: {
   },
 ]
 
-const PROJECTS: {
+const OPEN_SOURCE: {
   name: string; description: string; href: string; tech: string[]
 }[] = [
   {
@@ -111,6 +112,8 @@ export default function Page() {
       new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt) ? -1 : 1
     )
     .slice(0, 3)
+
+  const projects = getProjects()
 
   return (
     <div>
@@ -203,10 +206,53 @@ export default function Page() {
       )}
 
       {/* ── Projects ─────────────────────────────────────────────────────── */}
-      {PROJECTS.length > 0 && (
-        <Panel title="Projects">
+      {projects.length > 0 && (
+        <Panel
+          title="Projects"
+          action={
+            <Link href="/projects" className={`text-xs ${hover}`}>All projects →</Link>
+          }
+        >
+          <div className="space-y-6">
+            {projects.map((project) => (
+              <Link key={project.slug} href={`/projects/${project.slug}`} className="group block">
+                {project.metadata.image && (
+                  <div
+                    className="relative w-full aspect-[16/9] rounded-md overflow-hidden mb-3 border"
+                    style={{ borderColor: 'var(--border)' }}
+                  >
+                    <Image
+                      src={project.metadata.image}
+                      alt={project.metadata.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 640px"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className={`text-sm font-medium mb-1 ${fg} group-hover:underline underline-offset-2`}>{project.metadata.title}</p>
+                    <p className={`text-xs leading-relaxed mb-2.5 ${muted}`}>{project.metadata.summary}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.tech.map(t => (
+                        <span key={t} className={`text-xs px-2 py-0.5 rounded bg-[var(--muted)] ${muted}`}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <ArrowUpRightIcon className={`w-3.5 h-3.5 mt-0.5 shrink-0 transition-colors ${muted} group-hover:text-[var(--foreground)]`} />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </Panel>
+      )}
+
+      {/* ── Open Source ──────────────────────────────────────────────────── */}
+      {OPEN_SOURCE.length > 0 && (
+        <Panel title="Open Source">
           <div className="space-y-5">
-            {PROJECTS.map((project, i) => (
+            {OPEN_SOURCE.map((project, i) => (
               <a key={i} href={project.href} target="_blank" rel="noopener noreferrer" className="group flex items-start justify-between gap-4">
                 <div>
                   <p className={`text-sm font-medium mb-1 ${fg} group-hover:underline underline-offset-2`}>{project.name}</p>
