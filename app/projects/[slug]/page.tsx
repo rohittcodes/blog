@@ -81,7 +81,7 @@ export default async function ProjectPage({ params }: PageProps) {
       />
 
       <PageBleed>
-        <h1 className="title text-xl font-semibold tracking-tight text-[var(--foreground)]">
+        <h1 className="title text-page-title tracking-tight text-[var(--foreground)]">
           {project.metadata.title}
         </h1>
         {project.metadata.summary ? (
@@ -109,7 +109,7 @@ export default async function ProjectPage({ params }: PageProps) {
             href={project.metadata.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block text-xs mt-4 underline underline-offset-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            className="link-muted inline-block text-xs mt-4 underline underline-offset-2"
           >
             View live →
           </a>
@@ -122,7 +122,7 @@ export default async function ProjectPage({ params }: PageProps) {
         action={
           <Link
             href="/projects"
-            className="text-xs transition-colors text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+            className="link-muted text-xs"
           >
             ← All projects
           </Link>

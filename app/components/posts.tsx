@@ -19,9 +19,9 @@ export function BlogPosts() {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group flex items-baseline justify-between gap-4"
+            className="link-card group flex items-baseline justify-between gap-4"
           >
-            <p className="text-sm text-[var(--foreground)] transition-colors group-hover:text-[var(--muted-foreground)]">
+            <p className="link-card-title text-sm text-[var(--foreground)]">
               {post.metadata.title}
             </p>
             <p className="text-xs shrink-0 tabular-nums text-[var(--muted-foreground)]">

@@ -14,7 +14,7 @@ export function CopyButton({ code }: { code: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="text-[11px] transition-colors cursor-pointer"
+      className="link-muted text-[11px] cursor-pointer"
       style={{ color: copied ? 'var(--foreground)' : 'var(--muted-foreground)' }}
     >
       {copied ? 'Copied!' : 'Copy'}

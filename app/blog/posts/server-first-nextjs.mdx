@@ -1,0 +1,91 @@
+---
+title: 'Why I Build Server-First in Next.js'
+publishedAt: '2026-03-01'
+summary: 'A practical case for defaulting to Server Components — less client JavaScript, simpler data flow, and fewer bugs that only show up after deploy.'
+---
+
+For a long time my default in React was client-side everything. Fetch in `useEffect`, hold loading state in context, sprinkle `useMemo` when things got slow. It worked, but every new page felt like wiring the same plumbing again.
+
+When App Router landed, I treated Server Components as a novelty — nice for static marketing pages, not for "real" apps. That changed once I stopped trying to port my old mental model and started designing pages around what the server can do for free.
+
+## What "server-first" actually means
+
+It doesn't mean zero client code. It means the default component is a Server Component, and you only opt into `"use client"` when you need browser APIs, local state, or event handlers.
+
+Most pages I build now look like this:
+
+- **Server:** fetch data, enforce auth, render HTML
+- **Client:** theme toggle, copy button, anything that responds to clicks
+
+That's a smaller client bundle than fetching the same data after hydration and hoping the loading skeleton matches the final layout.
+
+## The bugs that disappear
+
+Two categories of problems got noticeably rarer.
+
+**Waterfall requests.** Client-side fetching often chains: load page → hydrate → fetch user → fetch posts → render. Server Components let you fetch in parallel at request time, on the server, without exposing API keys or duplicating types across client and server.
+
+**Flash of wrong content.** Loading spinners are fine until they're not. SSR with client fetch means users sometimes see empty state, then content, then a layout shift. Server-rendered HTML arrives complete. Suspense boundaries handle the slow parts without blanking the whole page.
+
+## A pattern I use constantly
+
+Here's a simplified version of how I structure a list page:
+
+```tsx
+// app/projects/page.tsx — Server Component (no directive)
+import { getProjects } from './utils'
+import { ProjectsList } from 'app/components/projects-list'
+
+export default function ProjectsPage() {
+  const projects = getProjects()
+
+  return (
+    <main>
+      <h1>Projects</h1>
+      <ProjectsList projects={projects} />
+    </main>
+  )
+}
+```
+
+`getProjects()` reads MDX files from disk at request/build time. No API route, no client fetch, no loading state. If I need interactivity inside a card — a hover tooltip, a filter dropdown — that specific leaf component gets `"use client"`, not the page.
+
+The rule I follow: push `"use client"` as far down the tree as possible.
+
+## When I still reach for the client
+
+Server Components aren't free magic. I use client components when:
+
+- **Input is local** — search filters, form fields, toggles
+- **Browser APIs matter** — `localStorage`, clipboard, geolocation
+- **Subscriptions** — WebSockets, live updates, animation frames
+
+Everything else gets a hard justification before I add `"use client"` at the top of a file.
+
+## Caching is the other half
+
+Server-first only feels good if you're deliberate about caching. I lean on:
+
+- Static generation for content that changes rarely (blog posts, project pages)
+- Dynamic rendering for anything user-specific
+- Revalidation when I need freshness without rebuilding the whole site
+
+Getting this wrong feels worse than pure client-side fetching — stale data on the server is silent. I document cache decisions next to the fetch, the same way I'd document why an API route requires auth.
+
+## The tradeoffs I'm honest about
+
+**Debugging is different.** Errors that used to show up in the browser console sometimes surface in the terminal during `next dev`. That's better for production, worse until you're used to it.
+
+**Mental model shift.** You can't pass event handlers from Server to Client Components. Serializable props only. That constraint annoyed me at first; now it forces cleaner boundaries.
+
+**Not every library works.** Anything that assumes `window` on import needs a client wrapper or dynamic import. I check this before npm installing, not after a cryptic build error.
+
+## What I'd tell past-me
+
+Start with the server. Add client only where interaction demands it. Treat `"use client"` like a cost, not a default.
+
+The apps I ship now are faster, simpler to reason about, and easier to change six months later — which is the metric that actually matters when you're maintaining your own work.
+
+---
+
+If you're mid-migration from Pages Router or a CRA-style setup, pick one route and rebuild it server-first. The pattern clicks faster on a real page than in abstract docs.

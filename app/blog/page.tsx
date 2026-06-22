@@ -34,7 +34,7 @@ export default function Page() {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <PageBleed>
-        <h1 className="text-xl font-semibold tracking-tight text-[var(--foreground)]">
+        <h1 className="text-page-title tracking-tight text-[var(--foreground)]">
           Blog
         </h1>
         <p className="text-sm mt-1.5 text-[var(--muted-foreground)]">

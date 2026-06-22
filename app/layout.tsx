@@ -7,6 +7,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import Footer from './components/footer'
 import { baseUrl } from './sitemap'
+import { brittanySignature } from './fonts/brittany'
 
 const defaultOgImage = {
   url: '/og?title=Rohith%20Singh',
@@ -106,7 +107,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cx(GeistSans.variable, GeistMono.variable)}
+      className={cx(GeistSans.variable, GeistMono.variable, brittanySignature.variable)}
       suppressHydrationWarning
     >
       <head>

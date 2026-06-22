@@ -102,7 +102,7 @@ export default async function Blog({ params }: PageProps) {
       />
 
       <PageBleed>
-        <h1 className="title text-xl font-semibold tracking-tight text-[var(--foreground)]">
+        <h1 className="title text-page-title tracking-tight text-[var(--foreground)]">
           {post.metadata.title}
         </h1>
         <p className="text-sm mt-2 tabular-nums text-[var(--muted-foreground)]">
@@ -121,7 +121,7 @@ export default async function Blog({ params }: PageProps) {
         action={
           <Link
             href="/blog"
-            className="text-xs transition-colors text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+            className="link-muted text-xs"
           >
             ← All posts
           </Link>
