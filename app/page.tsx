@@ -103,8 +103,6 @@ export default function Page() {
 
   return (
     <div>
-
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <PageBleed topDivider topDividerBorderless bleedX sectionClassName="py-0">
         <div className="hero-layout">
           <div className="hero-aside">
@@ -130,8 +128,6 @@ export default function Page() {
           </div>
         </div>
       </PageBleed>
-
-      {/* ── Contact ──────────────────────────────────────────────────────── */}
       <PageBleed topDivider sectionClassName="py-0">
         <InfoColumns
           left={[
@@ -170,7 +166,6 @@ export default function Page() {
         />
       </PageBleed>
 
-      {/* ── Socials ──────────────────────────────────────────────────────── */}
       <PageBleed topBorder sectionClassName="py-2">
         <div className="flex gap-3.5">
           {[
@@ -195,12 +190,10 @@ export default function Page() {
         </div>
       </PageBleed>
 
-      {/* ── About ────────────────────────────────────────────────────────── */}
       <Panel title="About">
         <p className={`text-sm leading-relaxed ${fg}`}>{ABOUT.bio}</p>
       </Panel>
 
-      {/* ── Tech Stack ───────────────────────────────────────────────────── */}
       <Panel
         title="Tech Stack"
         bodyClassName="column-sides max-w-2xl mx-auto px-6"
@@ -208,7 +201,6 @@ export default function Page() {
         <StackResume categories={TECH_STACK} />
       </Panel>
 
-      {/* ── Experience ───────────────────────────────────────────────────── */}
       {EXPERIENCE.length > 0 && (
         <Panel title="Experience">
           <div className="space-y-7">
@@ -235,7 +227,6 @@ export default function Page() {
         </Panel>
       )}
 
-      {/* ── Projects ─────────────────────────────────────────────────────── */}
       {projects.length > 0 && (
         <Panel
           title="Projects"
@@ -247,7 +238,6 @@ export default function Page() {
         </Panel>
       )}
 
-      {/* ── Open Source ──────────────────────────────────────────────────── */}
       {OPEN_SOURCE.length > 0 && (
         <Panel title="Open Source">
           <div className="space-y-5">
@@ -273,7 +263,6 @@ export default function Page() {
         </Panel>
       )}
 
-      {/* ── Blog Posts ───────────────────────────────────────────────────── */}
       <Panel
         title="Recent Posts"
         action={

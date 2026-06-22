@@ -15,11 +15,9 @@ export function GET(request: Request) {
         tw="flex flex-col w-full h-full bg-black text-white"
         style={{ fontFamily: 'sans-serif' }}
       >
-        {/* top accent bar */}
         <div tw="w-full h-1 bg-white" style={{ opacity: 0.08 }} />
 
         <div tw="flex flex-col flex-1 justify-between px-16 py-14">
-          {/* title */}
           <div tw="flex flex-col">
             <p tw="text-gray-500 text-xl mb-5 m-0" style={{ letterSpacing: '0.18em', textTransform: 'uppercase' }}>
               rohittcodes
@@ -29,10 +27,8 @@ export function GET(request: Request) {
             </h1>
           </div>
 
-          {/* footer row */}
           <div tw="flex items-center justify-between">
             <div tw="flex items-center gap-4">
-              {/* avatar */}
               <img
                 src={avatar}
                 width={56}

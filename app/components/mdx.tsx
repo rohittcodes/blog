@@ -68,7 +68,6 @@ function Pre({ children }: { children?: React.ReactNode }) {
       className="not-prose my-5 overflow-hidden rounded-lg"
       style={{ border: '1px solid var(--line)' }}
     >
-      {/* Header: language label + copy button */}
       <div
         className="flex items-center justify-between px-4 py-2"
         style={{
@@ -84,7 +83,6 @@ function Pre({ children }: { children?: React.ReactNode }) {
         </span>
         <CopyButton code={rawCode} />
       </div>
-      {/* Code body */}
       <pre
         className="overflow-x-auto px-4 py-4 text-sm m-0 rounded-none border-0"
         style={{ backgroundColor: 'var(--background)' }}
@@ -98,7 +96,6 @@ function Pre({ children }: { children?: React.ReactNode }) {
 function MarkdownImage({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
   return (
     <figure className="my-6 not-prose">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={alt || ''}
